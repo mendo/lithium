@@ -98,13 +98,16 @@ class Request extends \lithium\net\http\Message {
 	 * @return array
 	 */
 	public function queryString($params = array(), $format = "{:key}={:value}&") {
+		if (empty($this->params['query'])) {
+			return null;
+		}
 		if (!$params) {
-			if (is_string($this->params)) {
-				return "?" . $this->params;
+			if (is_string($this->params['query'])) {
+				return "?" . $this->params['query'];
 			}
-			$params = $this->params;
-		} elseif (is_array($this->params)) {
-			$params = array_merge($this->params, $params);
+			$params = $this->params['query'];
+		} elseif (is_array($this->params['query'])) {
+			$params = array_merge($this->params['query'], $params);
 		}
 		$query = null;
 
@@ -115,7 +118,7 @@ class Request extends \lithium\net\http\Message {
 		if (!$query) {
 			return null;
 		}
-		return "?" . $this->params = substr($query, 0, -1);
+		return "?" . $this->params['query'] = substr($query, 0, -1);
 	}
 
 	/**
