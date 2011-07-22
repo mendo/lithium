@@ -376,6 +376,47 @@ class ExporterTest extends \lithium\test\Unit {
 	}
 
 	/**
+	 * Test that subobjects are properly casted on creating a new Document
+	 */
+	public function testSubObjectCastingOnSave() {
+		$model = $this->_model;
+		$model::schema(array(
+			'sub.foo' => array('type' => 'boolean'),
+			'bar' => array('type' => 'boolean')
+		));
+		$data = array('sub' => array('foo' => 0), 'bar' => 1);
+		$doc = new Document(compact('data', 'model'));
+
+		$this->assertIdentical(true, $doc->bar);
+		$this->assertIdentical(false, $doc->sub->foo);
+
+		$data = array('sub.foo' => '1', 'bar' => '0');
+		$doc = new Document(compact('data', 'model', 'schema'));
+
+		$this->assertIdentical(false, $doc->bar);
+		$this->assertIdentical(true, $doc->sub->foo);
+	}
+
+	/**
+	 * Tests that a nested key on a previously saved document gets updated properly.
+	 */
+	public function testExistingNestedKeyOverwrite() {
+		$doc = new Document(array('model' => $this->_model));
+		$doc->{'this.that'} = 'value1';
+		$this->assertEqual(array('this' => array('that' => 'value1')), $doc->data());
+
+		$result = Exporter::get('create', $doc->export());
+		$this->assertEqual(array('create' => array('this' => array('that' => 'value1'))), $result);
+
+		$doc->sync();
+		$doc->{'this.that'} = 'value2';
+		$this->assertEqual(array('this' => array('that' => 'value2')), $doc->data());
+
+		$result = Exporter::get('update', $doc->export());
+		$this->assertEqual(array('update' => array('this.that' => 'value2')), $result);
+	}
+
+	/**
 	 * @todo Implement me.
 	 */
 	public function testCreateWithWhitelist() {
