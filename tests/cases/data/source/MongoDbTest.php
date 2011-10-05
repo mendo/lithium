@@ -66,7 +66,6 @@ class MongoDbTest extends \lithium\test\Unit {
 	 * This hack is a necessary optimization until these tests are properly mocked out.
 	 *
 	 * @param array $options Options for the parent class' method.
-	 * @return void
 	 */
 	public function run(array $options = array()) {
 		$this->_results = array();
@@ -532,8 +531,6 @@ class MongoDbTest extends \lithium\test\Unit {
 	/**
 	 * Tests that the MongoDB adapter will not attempt to overwrite the _id field on document
 	 * update.
-	 *
-	 * @return void
 	 */
 	public function testPreserveId() {
 		$model = $this->_model;
@@ -649,8 +646,6 @@ class MongoDbTest extends \lithium\test\Unit {
 
 	/**
 	 * Assert that Mongo and the Mongo Exporter don't mangle manual geospatial queries.
-	 *
-	 * @return void
 	 */
 	public function testGeoQueries() {
 		$coords = array(84.13, 11.38);

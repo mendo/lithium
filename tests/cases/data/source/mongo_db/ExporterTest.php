@@ -335,6 +335,7 @@ class ExporterTest extends \lithium\test\Unit {
 	}
 
 	/**
+<<<<<<< HEAD
 	 * Test that subobjects are properly casted on creating a new Document
 	 */
 	public function testSubObjectCastingOnSave() {
@@ -377,6 +378,9 @@ class ExporterTest extends \lithium\test\Unit {
 
 	/**
 	 * Test that subobjects are properly casted on creating a new Document
+=======
+	 * Test that sub-objects are properly casted on creating a new `Document`.
+>>>>>>> 8ca11ff4ed57c98c9b5b1e2fd679bfb8f1792116
 	 */
 	public function testSubObjectCastingOnSave() {
 		$model = $this->_model;
