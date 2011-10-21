@@ -520,8 +520,8 @@ class Request extends \lithium\net\http\Request {
 		$defaults = array(
 			'scheme' => $this->env('HTTPS') ? 'https' : 'http',
 			'host' => $this->env('HTTP_HOST'),
-			'path' => str_replace('//', '/', "/{$this->_base}/") . $this->url,
-			'query' => !empty($this->query) ? $this->query : null
+			'path' => $this->_base . $this->url,
+			'query' => $this->query
 		);
 		return parent::to($format, $options + $defaults);
 	}
@@ -573,7 +573,7 @@ class Request extends \lithium\net\http\Request {
 			return rtrim($_GET['url'], '/');
 		}
 		if ($uri = $this->env('REQUEST_URI')) {
-			return str_replace($this->env('base'), '/', parse_url($uri, PHP_URL_PATH));
+			return str_replace('//', '/', str_replace($this->env('base'), '/', parse_url($uri, PHP_URL_PATH)));
 		}
 		return '/';
 	}
