@@ -653,12 +653,17 @@ class MongoDb extends \lithium\data\Source {
 		$castOpts = compact('schema') + array('first' => true, 'arrays' => false);
 
 		foreach ($conditions as $key => $value) {
-			if ($key === '$or' || $key === 'or' || $key === '||') {
+			if ($key === '$or' || $key === 'or' || $key === '||' || $key === '$nor' || $key === '$and') {
 				foreach ($value as $i => $or) {
 					$value[$i] = $this->_conditions($or, $model, $schema, $context);
 				}
 				unset($conditions[$key]);
-				$conditions['$or'] = $value;
+
+				if ($key !== '$nor' && $key !== '$and') {
+					$key = '$or';
+				}
+
+				$conditions[$key] = $value;
 				continue;
 			}
 			if (is_object($value)) {
