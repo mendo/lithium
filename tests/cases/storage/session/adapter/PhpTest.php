@@ -2,7 +2,7 @@
 /**
  * Lithium: the most rad php framework
  *
- * @copyright     Copyright 2011, Union of Rad, Inc. (http://union-of-rad.org)
+ * @copyright     Copyright 2012, Union of Rad, Inc. (http://union-of-rad.org)
  * @license       http://opensource.org/licenses/bsd-license.php The BSD License
  */
 
@@ -68,6 +68,10 @@ class PhpTest extends \lithium\test\Unit {
 
 		$result = ini_get('session.cookie_httponly');
 		$this->assertTrue(1, (integer) $result);
+
+		$name = 'this-is-a-custom-name';
+		$php = new Php(array('session.name' => $name));
+		$this->assertFalse(is_numeric($php->_config['session.name']));
 	}
 
 	public function testCustomConfiguration() {

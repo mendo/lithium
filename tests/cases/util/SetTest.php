@@ -2,7 +2,7 @@
 /**
  * Lithium: the most rad php framework
  *
- * @copyright     Copyright 2011, Union of RAD (http://union-of-rad.org)
+ * @copyright     Copyright 2012, Union of RAD (http://union-of-rad.org)
  * @license       http://opensource.org/licenses/bsd-license.php The BSD License
  */
 
@@ -1110,10 +1110,12 @@ class SetTest extends \lithium\test\Unit {
 	}
 
 	public function testCheck() {
-		$set = array(
-			'My Index 1' => array('First' => 'The first item')
-		);
-		$this->assertTrue(Set::check($set, 'My Index 1.First'));
+		$set = array('My Index 1' => array(
+			'First' => 'The first item'
+		));
+		$result = Set::check($set, 'My Index 1.First');
+		$this->assertTrue($result);
+
 		$this->assertTrue(Set::check($set, 'My Index 1'));
 		$this->assertTrue(Set::check($set, array()));
 

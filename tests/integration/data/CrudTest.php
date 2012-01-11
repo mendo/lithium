@@ -2,7 +2,7 @@
 /**
  * Lithium: the most rad php framework
  *
- * @copyright     Copyright 2011, Union of RAD (http://union-of-rad.org)
+ * @copyright     Copyright 2012, Union of RAD (http://union-of-rad.org)
  * @license       http://opensource.org/licenses/bsd-license.php The BSD License
  */
 
@@ -52,7 +52,9 @@ class CrudTest extends \lithium\test\Integration {
 		$this->assertIdentical(0, Companies::count());
 
 		$new = Companies::create(array('name' => 'Acme, Inc.', 'active' => true));
-		$this->assertEqual($new->data(), array('name' => 'Acme, Inc.', 'active' => true));
+		$expected = array('name' => 'Acme, Inc.', 'active' => true);
+		$result = $new->data();
+		$this->assertEqual($expected, $result);
 
 		$this->assertEqual(
 			array(false, true, true),
@@ -118,6 +120,26 @@ class CrudTest extends \lithium\test\Integration {
 		}
 		$this->assertEqual(array(true, true, true), array_values($all->delete()));
 		$this->assertEqual(0, Companies::count());
+	}
+
+	public function testUpdateWithNewProperties() {
+		$new = Companies::create(array('name' => 'Acme, Inc.', 'active' => true));
+
+		$expected = array('name' => 'Acme, Inc.', 'active' => true);
+		$result = $new->data();
+		$this->assertEqual($expected, $result);
+
+		$new->foo = 'bar';
+		$expected = array('name' => 'Acme, Inc.', 'active' => true, 'foo' => 'bar');
+		$result = $new->data();
+		$this->assertEqual($expected, $result);
+
+		$this->assertTrue($new->save());
+
+		$updated = Companies::find((string) $new->_id);
+		$expected = 'bar';
+		$result = $updated->foo;
+		$this->assertEqual($expected, $result);
 	}
 }
 

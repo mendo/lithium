@@ -2,7 +2,7 @@
 /**
  * Lithium: the most rad php framework
  *
- * @copyright     Copyright 2011, Union of RAD (http://union-of-rad.org)
+ * @copyright     Copyright 2012, Union of RAD (http://union-of-rad.org)
  * @license       http://opensource.org/licenses/bsd-license.php The BSD License
  */
 
@@ -96,6 +96,7 @@ class DocumentArray extends \lithium\data\Collection {
 	 */
 	public function __unset($name) {
 		unset($this->_data[$name]);
+		prev($this->_data);
 	}
 
 	/**

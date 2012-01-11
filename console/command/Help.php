@@ -2,13 +2,14 @@
 /**
  * Lithium: the most rad php framework
  *
- * @copyright     Copyright 2011, Union of RAD (http://union-of-rad.org)
+ * @copyright     Copyright 2012, Union of RAD (http://union-of-rad.org)
  * @license       http://opensource.org/licenses/bsd-license.php The BSD License
  */
 
 namespace lithium\console\command;
 
 use lithium\core\Libraries;
+use lithium\core\Environment;
 use lithium\util\Inflector;
 use lithium\analysis\Inspector;
 use lithium\analysis\Docblock;
@@ -26,6 +27,10 @@ class Help extends \lithium\console\Command {
 	 * @return void
 	 */
 	public function run($command = null) {
+	    $message = 'Lithium console started in the ' . Environment::get() . ' environment.';
+		$message .= ' Use the --env=environment key to alter this.';
+		$this->out($message);
+
 		if (!$command) {
 			$this->_renderCommands();
 			return true;
@@ -39,7 +44,6 @@ class Help extends \lithium\console\Command {
 			$this->error("Command `{$command}` not found");
 			return false;
 		}
-		$command = Inflector::classify($command);
 
 		if (strpos($command, '\\') !== false) {
 			$command = join('', array_slice(explode("\\", $command), -1));

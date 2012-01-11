@@ -2,7 +2,7 @@
 /**
  * Lithium: the most rad php framework
  *
- * @copyright     Copyright 2011, Union of RAD (http://union-of-rad.org)
+ * @copyright     Copyright 2012, Union of RAD (http://union-of-rad.org)
  *                Copyright 2010, Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @license       http://opensource.org/licenses/mit-license.php The MIT License
  */
@@ -164,7 +164,7 @@ class Inflector {
 			'child' => 'children', 'corpus' => 'corpuses', 'cow' => 'cows',
 			'ganglion' => 'ganglions', 'genie' => 'genies', 'genus' => 'genera',
 			'graffito' => 'graffiti', 'hoof' => 'hoofs', 'loaf' => 'loaves', 'man' => 'men',
-			'money' => 'monies', 'mongoose' => 'mongooses', 'move' => 'moves',
+			'leaf' => 'leaves', 'money' => 'monies', 'mongoose' => 'mongooses', 'move' => 'moves',
 			'mythos' => 'mythoi', 'numen' => 'numina', 'occiput' => 'occiputs',
 			'octopus' => 'octopuses', 'opus' => 'opuses', 'ox' => 'oxen', 'penis' => 'penises',
 			'person' => 'people', 'sex' => 'sexes', 'soliloquy' => 'soliloquies',

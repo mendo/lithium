@@ -2,7 +2,7 @@
 /**
  * Lithium: the most rad php framework
  *
- * @copyright     Copyright 2011, Union of RAD (http://union-of-rad.org)
+ * @copyright     Copyright 2012, Union of RAD (http://union-of-rad.org)
  * @license       http://opensource.org/licenses/bsd-license.php The BSD License
  */
 
@@ -273,6 +273,19 @@ class DatabaseTest extends \lithium\test\Unit {
 					"{MockDatabaseTagging} WHERE MockDatabaseTag.tag IN " .
 					"('foo', 'bar', 'baz')));";
 		$this->assertEqual($expected, $result);
+
+		$query = new Query(array(
+			'type' => 'read', 'model' => $this->_model,
+			'conditions' => array(
+				'or' => array(
+					'{MockDatabasePost}.{id}' => 'value1',
+					'{MockDatabasePost}.{title}' => 'value2'
+				)
+			)
+		));
+		$sql = "SELECT * FROM {mock_database_posts} AS {MockDatabasePost} WHERE ";
+		$sql .= "({MockDatabasePost}.{id} = 'value1' OR {MockDatabasePost}.{title} = 'value2');";
+		$this->assertEqual($sql, $this->db->renderCommand($query));
 	}
 
 	public function testJoin() {

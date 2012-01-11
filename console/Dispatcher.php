@@ -2,7 +2,7 @@
 /**
  * Lithium: the most rad php framework
  *
- * @copyright     Copyright 2011, Union of RAD (http://union-of-rad.org)
+ * @copyright     Copyright 2012, Union of RAD (http://union-of-rad.org)
  * @license       http://opensource.org/licenses/bsd-license.php The BSD License
  */
 
@@ -87,13 +87,11 @@ class Dispatcher extends \lithium\core\StaticObject {
 		return static::_filter(__FUNCTION__, $params, function($self, $params) use ($classes) {
 			$request = $params['request'];
 			$options = $params['options'];
-
 			$router = $classes['router'];
 			$request = $request ?: new $classes['request']($options['request']);
 			$request->params = $router::parse($request);
-
 			$params = $self::applyRules($request->params);
-
+			Environment::set($request);
 			try {
 				$callable = $self::invokeMethod('_callable', array($request, $params, $options));
 				return $self::invokeMethod('_call', array($callable, $request, $params));
@@ -170,7 +168,6 @@ class Dispatcher extends \lithium\core\StaticObject {
 	 */
 	protected static function _call($callable, $request, $params) {
 		$params = compact('callable', 'request', 'params');
-		Environment::set($request);
 		return static::_filter(__FUNCTION__, $params, function($self, $params) {
 			if (is_callable($callable = $params['callable'])) {
 				$request = $params['request'];

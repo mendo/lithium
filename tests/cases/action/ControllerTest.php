@@ -2,7 +2,7 @@
 /**
  * Lithium: the most rad php framework
  *
- * @copyright     Copyright 2011, Union of RAD (http://union-of-rad.org)
+ * @copyright     Copyright 2012, Union of RAD (http://union-of-rad.org)
  * @license       http://opensource.org/licenses/bsd-license.php The BSD License
  */
 
@@ -170,9 +170,10 @@ class ControllerTest extends \lithium\test\Unit {
 		);
 		$this->assertEqual($expected, $controller->response->data);
 	}
-	
+
 	/**
-	 * Verifies that Controller does not modify data when passed an array (or RecordSet) with a single element
+	 * Verifies that the Controller does not modify data when passed an array (or RecordSet)
+	 * with a single element.
 	 *
 	 * @return void
 	 */

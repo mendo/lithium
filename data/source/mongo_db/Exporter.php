@@ -2,7 +2,7 @@
 /**
  * Lithium: the most rad php framework
  *
- * @copyright     Copyright 2011, Union of RAD (http://union-of-rad.org)
+ * @copyright     Copyright 2012, Union of RAD (http://union-of-rad.org)
  * @license       http://opensource.org/licenses/bsd-license.php The BSD License
  */
 
@@ -11,6 +11,10 @@ namespace lithium\data\source\mongo_db;
 use lithium\util\Set;
 
 class Exporter extends \lithium\core\StaticObject {
+
+	protected static $_classes = array(
+		'array' => 'lithium\data\collection\DocumentArray'
+	);
 
 	protected static $_commands = array(
 		'create'    => null,
@@ -158,8 +162,22 @@ class Exporter extends \lithium\core\StaticObject {
 			return (is_object($value) && method_exists($value, 'export'));
 		});
 
-		foreach (array_merge($right, $objects) as $key => $value) {
-			$result = static::_append($result, "{$path}{$key}", $value);
+		array_map(function($key) use (&$left) { unset($left[$key]); }, array_keys($right));
+		foreach ($left as $key => $value) {
+			$result = static::_append($result, "{$path}{$key}", $value, 'remove');
+		}
+		$data = (array) $right + (array) $objects;
+
+		foreach ($data as $key => $value) {
+			$original = $export['data'];
+			$isArray = is_object($value) && get_class($value) == static::$_classes['array'];
+			if ($isArray && isset($original[$key]) && $value->data() != $original[$key]->data()) {
+				$value = $value->data();
+			}
+			if ($isArray && !isset($original[$key])) {
+				 $value = $value->data();
+			}
+			$result = static::_append($result, "{$path}{$key}", $value, 'update');
 		}
 		return array_filter($result);
 	}
@@ -191,17 +209,29 @@ class Exporter extends \lithium\core\StaticObject {
 	 *               value is or is contained within a nested object.
 	 * @param mixed $value The value to append to the changeset. Can be a scalar value, array, a
 	 *              nested object, or part of a nested object.
+	 * @param string $change The type of change, as to whether update/remove or rename etc.
 	 * @return array Returns the value of `$changes`, with any new changed values appended.
 	 */
 	protected static function _append($changes, $key, $value) {
 		$options = array('finalize' => false);
 
 		if (!is_object($value) || !method_exists($value, 'export')) {
-			$changes['update'][$key] = $value;
+			$changes[$change][$key] = ($change == 'update') ? $value : true;
 			return $changes;
 		}
 		if ($value->exists()) {
-			return Set::merge($changes, static::_update($value->export()));
+			if ($change == 'update') {
+				$export = $value->export();
+				$export['key'] = $key;
+				return Set::merge($changes, static::_update($export));
+			}
+
+			$children = static::_update($value->export());
+			if (!empty($children)) {
+				return Set::merge($changes, $children);
+			}
+			$changes[$change][$key] = true;
+			return $changes;
 		}
 		$changes['update'][$key] = static::_create($value->export(), $options);
 		return $changes;
